@@ -107,9 +107,17 @@ function paginacion(courses, j, canti) {
     let l = 3; //cantidad de cursos por fila
     let inicio = (j - 1) * cant;
     let final = inicio + cant;
+    let srcvideo;
+    let code;
     for (var i = inicio; i < final; i++) {
         r = courses[i];
-        //console.log(r);
+        let descripcion = r['description'];
+        descripcion = descripcion.replace(/\n/g, "<br />");
+        //data-toggle="modal" data-src="https://player.vimeo.com/video/58385453?badge=0" data-target="#myModal
+        //srcvideo='https://player.vimeo.com/video/58385453?badge=0';
+        code = r['videoCode']; //código de video de intro 
+        srcvideo = 'https://player.vimeo.com/video/' + code + '?badge=0';
+        //console.log(code);
         if (typeof (r) != 'undefined') {
             if ((i % l) == 0) {
                 fila++;
@@ -121,11 +129,16 @@ function paginacion(courses, j, canti) {
 
                     '<div class="col-xl-3 mt-2">' +
                     '<div class="  mendocard shadow-lg" style="width: 18rem;" curso=' + r['id'] + '>' +
-                    '<img src="imgcourses/' + r['imgname'] + '"' + 'id=img' + r['id'] + '" class="mendocard-picture">' +
+                    //imagenes solapadas
+                    '<div id="card-imgs">' +
+                    '<img data-toggle="modal" data-target="#myModal" src-video="' + srcvideo + '" src="imgcourses/' + r['imgname'] + '"' + 'id=img' + r['id'] + '" class="mendocard-picture sobre">' +
+                    '<img src="imgcourses/playicon.png" class="mendocard-picture playicon" />' +
+                    '</div>' +
+                    //..........
                     '<div class="">' +
                     '<h5 class="pt-2">' + r['name'] + '</h5>' +
-                    '<p class="">' + r['description'] + '</p>' +
-                    '<p><tr><span id="Estrella' + r['id'] + '"></span> <span class="ml-1" id="totalStars' + r['id'] + '">(Valoración: ' + r['prom'].toFixed(1) + ' estrellas, votos totales: ' + r['cant'] + ')</span>' +
+                    '<p>' + descripcion + '</p>' +
+                    '<p><tr><span id="Estrella' + r['id'] + '"></span> <span class="ml-1" id="totalStars' + r['id'] + '">(Valoración: ' + r['prom'].toFixed(1) + '/' + r['cant'] + ')</span>' +
                     '</tr></p>' +
                     '<button class="curso btn btn-block btn-info text-white" title="' + r['name'] + '" tipo="Ver" curso="' + r['id'] + '" id=curso' + r['id'] + '> Ver </button>' +
                     '</div>' +
@@ -164,11 +177,16 @@ function paginacion(courses, j, canti) {
 
                     '<div class="col-xl-3 mt-2">' +
                     '<div class="mendocard shadow-lg " style="width: 18rem;" curso=' + r['id'] + '>' +
-                    '<img src="imgcourses/' + r['imgname'] + '"' + 'img=' + r['imgname'] + '" class="mendocard-picture">' +
+                    //Imagenes solapadas
+                    '<div id="card-imgs">' +
+                    '<img data-toggle="modal" data-target="#myModal" src-video="' + srcvideo + '" title="ver intro" src="imgcourses/' + r['imgname'] + '"' + 'img=' + r['imgname'] + '" class="mendocard-picture sobre">' +
+                    '<img src="imgcourses/playicon.png" class="mendocard-picture playicon" />' +
+                    '<div>' +
+                    //...................
                     '<div class="">' +
                     '<h5 class="pt-2">' + r['name'] + '</h5>' +
-                    '<p class="">' + r['description'] + '</p>' +
-                    '<p><tr><span id="Estrella' + r['id'] + '"></span> <span class="ml-1" id="totalStars' + r['id'] + '">(Valoración: ' + r['prom'].toFixed(1) + ' estrellas, votos totales: ' + r['cant'] + ')</span>' +
+                    '<p class="">' + descripcion + '</p>' +
+                    '<p><tr><span id="Estrella' + r['id'] + '"></span> <span class="ml-1" id="totalStars' + r['id'] + '">(Valoración: ' + r['prom'].toFixed(1) + '/' + r['cant'] + ')</span>' +
                     '</tr></p>' +
                     '<p class="">Precio: ' + precio + '</p>' +
                     '<button class="curso btn btn-block btn-' + color + ' "  title="' + r['name'] + '" tipo=Comprar curso=' + r['id'] + ' id="curso' + r['id'] + '" ' + opcion + '> ' + tipo + ' </button>' +
@@ -179,6 +197,7 @@ function paginacion(courses, j, canti) {
 
             }
             estrellas(r['prom'], true, r['id']);
+            videomodal();
         }
 
 
@@ -597,7 +616,8 @@ function cargacurso() {
                     // console.log(rs['videoname']);
                     //--------------------------------------------------------------------CURSO COMPRADO----------------------------------------------------------------------------
                     if (rs['bought'] == true) {
-
+                        let descripcion = rs['description'];
+                        descripcion = descripcion.replace(/\n/g, "<br />");
                         //$('#pago').empty().append('<h2 class="display-5 alert alert-info"> <strong>La carga de cursos estará habilitada en breve</strong>. </br></br>¡Muchas gracias!</h2>');
                         //$('#exampleModal').modal('show');
 
@@ -620,15 +640,16 @@ function cargacurso() {
                             '<div class="card-body">' +
                             '<h6 class="card-title">' + rs['name'] + '<h6>' +
                             //'<p class="card-text h6">' + rs['description'] + '</p>' +
-                            '<p class="card-text"><small class="text-muted">' + rs['description'] + '</small></p>' +
+                            //'<p class="card-text"><small class="text-muted">' + rs['description'] + '</small></p>' +
+                            '<p class="card-text"><small class="text-muted">' + descripcion + '</small></p>' +
                             '</div>' +
                             '</div>';
                         if (sessionrol == 0) {
                             videostarjeta += '<div class="mt-3">' +
                                 '<a id="view" href="#" class="text-info font-weight-bold text-decoration-none mr-2" >Visualizaciones   <i class="fas fa-download"></i></a> </div>';
-                            videostarjeta += '<div class="mt-3">Calificar: <span class="Estrellas"></span> <span class="ml-1" id="totalStars' + rs['id'] + '">(Valoración: ' + rs['prom'].toFixed(1) + ' estrellas, votos totales: ' + rs['cant'] + ')</span></div>';
+                            videostarjeta += '<div class="mt-3">Calificar: <span class="Estrellas"></span> <span class="ml-1" id="totalStars' + rs['id'] + '">(Valoración: ' + rs['prom'].toFixed(1) + '/' + rs['cant'] + ')</span></div>';
                         } else {
-                            videostarjeta += 'Calificar: <span class="Estrellas"></span> <span class="ml-1" id="totalStars' + rs['id'] + '">(Valoración: ' + rs['prom'].toFixed(1) + ' estrellas, votos totales: ' + rs['cant'] + ')</span>';
+                            videostarjeta += 'Calificar: <span class="Estrellas"></span> <span class="ml-1" id="totalStars' + rs['id'] + '">(Valoración: ' + rs['prom'].toFixed(1) + '/' + rs['cant'] + ')</span>';
                         }
 
                         videostarjeta +=
@@ -2166,6 +2187,35 @@ function iniciardatepicker() {
         });
 
     });
+}
+
+function videomodal() {
+    // Gets the video src from the data-src on each button
+    //index1
+    var videoSrc;
+    $('.mendocard-picture').click(function () {
+        videoSrc = $(this).attr("src-video");
+    });
+    //console.log(videoSrc);
+
+
+
+    // when the modal is opened autoplay it  
+    $('#myModal').on('shown.bs.modal', function (e) {
+
+        // set the video src to autoplay and not to show related video. Youtube related video is like a box of chocolates... you never know what you're gonna get
+        $("#video").attr('src', videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
+    })
+
+
+
+    // stop playing the youtube video when I close the modal
+    $('#myModal').on('hide.bs.modal', function (e) {
+        // a poor man's stop video
+        $("#video").attr('src', videoSrc);
+    })
+
+
 }
 $(document).ready(function () {
     getRegistrados();

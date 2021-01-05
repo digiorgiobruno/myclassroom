@@ -84,3 +84,24 @@ table>tbody>tr>td {
   width: 100%;
   float: left;
 }
+/*Modal video*/
+
+.modal-dialog-video  {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.modal-body-video {
+  position: relative;
+  padding: 0px;
+}
+.close-video {
+  position: absolute;
+  right: -30px;
+  top: 0;
+  z-index: 999;
+  font-size: 2rem;
+  font-weight: normal;
+  color: #fff;
+  opacity: 1;
+}

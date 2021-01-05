@@ -544,7 +544,32 @@ if (session_status() == PHP_SESSION_NONE) {
 
   </div>
 
-  <div class="modal fade bd-example-modal-lg" id="modalvideo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-video" role="document">
+      <div class="modal-content">
+
+
+        <div class="modal-body modal-body-video">
+
+          <button type="button" class="close close-video" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <!-- 16:9 aspect ratio -->
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--<div class="modal fade bd-example-modal-lg" id="modalvideo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <video id="video" controls style="width:100%;">
@@ -553,7 +578,7 @@ if (session_status() == PHP_SESSION_NONE) {
         </video>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <!-- Footer -->
   <footer class="footer">

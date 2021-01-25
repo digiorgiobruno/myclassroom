@@ -3,17 +3,13 @@ include("mysqli.php");
 
 //Si operacion igual a cargar devuelve las categorias y las subcategorias
 if (isset($_POST['operacion']) && $_POST['operacion'] == 'cargar') {
-    $s = MySQLDB::getInstance()->query("SELECT * FROM categories ");
+    //$s = MySQLDB::getInstance()->query("SELECT * FROM categories ");
     $sql1 = MySQLDB::getInstance()->query("SELECT * FROM categories ");
-    if ($s->num_rows > 0) {
-
-        $i = 0;
-        $j = 0;
+    if ($sql1->num_rows > 0) {
 
         $categorias1 = '';
 
-        for ($i = 0; $i <= 4; $i++) {
-            $rs1 = $sql1->fetch_assoc();
+        while ($rs1  = $sql1->fetch_assoc()) {
             $idcat = $rs1['id'];
             $pill = "";
             if ($idcat == 28) {
@@ -21,9 +17,9 @@ if (isset($_POST['operacion']) && $_POST['operacion'] == 'cargar') {
             }
             $sql2 = MySQLDB::getInstance()->query("SELECT * FROM subcategories WHERE idcategory='$idcat'");
             if ($rs1['name'] != "") {
-                $categorias1 .= '<li class="nav-item dropdown">
+                $categorias1 .= '<li class="nav-item list-group-item list-group-item-action bg-light pt-0 pb-0">
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              ' . $rs1['name'] .$pill . '
+              ' . $rs1['name'] . $pill . '
             </a><div class="dropdown-menu" aria-labelledby="navbarDropdown">';
                 while ($rs2 = $sql2->fetch_assoc()) {
 
@@ -34,43 +30,9 @@ if (isset($_POST['operacion']) && $_POST['operacion'] == 'cargar') {
             }
 
             $categorias1 .= '</div></li>';
-            $j++;
-        }
-        $i = 0;
-        $categorias = '<a class="nav-link dropdown-toggle" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Más</a>
-        <ul  class="dropdown-menu" aria-labelledby="dropdown1">';
-
-        $l = $s->num_rows;
-        //echo "for desde j =".$j." hasta l ".$l;
-        while ($aux = $s->fetch_assoc()) {
-            $rs[] = $aux;
-        }
-        //print_r($rs);
-        //die;
-        for ($i = $j; $i <= $l - 1; $i++) {
-            //$rs = $s->fetch_assoc();
-            $idcat = $rs[$i]['id'];
-            $sql1 = MySQLDB::getInstance()->query("SELECT * FROM subcategories WHERE idcategory='$idcat'");
-            //if ($sql1->num_rows>0) {
-            $categorias .= '<li class="dropdown-item dropdown">
-                            <a class="dropdown-toggle" id="dropdown1-' . $i . '"data-toggle="dropdown"'
-                . 'aria-haspopup="true" aria-expanded="false">' . $rs[$i]['name'] . '</a>
-                                <!--Item subcategoria-->
-                                <ul class="dropdown-menu" aria-labelledby="dropdown1-' . $i . '">';
-
-
-            while ($rs1 = $sql1->fetch_assoc()) {
-
-                $categorias .= '<!--Item categoria-->
-                    <li class="dropdown-item " href="#"><a categoryname="' . $rs[$i]['name'] . '" idcategory="' . $rs[$i]['id'] . '" idsubcategory="' . $rs1['id'] . '" class="subcategory nav-element">' . $rs1['name'] . '</a></li>
-                                ';
-            }
-            $categorias .= '</li></ul>';
-            //}
-
         }
 
-        //$categorias.='';
+        $categorias = '<ul  class="dropdown-menu" aria-labelledby="dropdown1">';
     } else {
         $categorias = "No hay cursos cargados";
     }

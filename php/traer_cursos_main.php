@@ -41,6 +41,10 @@ function todos($cat, $subcat)
 
     if ($sql->num_rows) {
         while ($rs = $sql->fetch_assoc()) {
+
+            $codeVideoQuery = MySQLDB::getInstance()->query("SELECT videoscourse.name FROM videoscourse,themes,course WHERE course.id=" . $rs['id'] . " AND course.id=videoscourse.idcourse AND videoscourse.idtheme=themes.id AND themes.name='intro'");
+            $codeVideoArray = $codeVideoQuery->fetch_assoc();
+            $codeVideo=$codeVideoArray['name'];
             if (isset($_SESSION['id'])) {
                 $sqlcheck = MySQLDB::getInstance()->query("SELECT id FROM courseuser WHERE idcourse= " . $rs['id'] . " AND iduser = " . $_SESSION['id'] . " ");
                 $comprado = $sqlcheck->num_rows;
@@ -51,13 +55,13 @@ function todos($cat, $subcat)
                 $stars = consultastar($rs['id']);
                 $cursos[] = array(
                     'id' => $rs['id'], 'name' => $rs['name'], 'description' => $rs['description'],
-                    'category' => $rs['category'], 'imgname' => $rs['imgname'], 'price' => $rs['price'], 'credentialid' => $rs['credentialid'], 'prom' => $stars[0]['prom'], 'cant' => $stars[0]['cant'], 'bought' => true
+                    'category' => $rs['category'], 'imgname' => $rs['imgname'], 'price' => $rs['price'], 'credentialid' => $rs['credentialid'], 'prom' => $stars[0]['prom'], 'cant' => $stars[0]['cant'], 'bought' => true, 'videoCode' => $codeVideo
                 );
             } else {
                 $stars = consultastar($rs['id']);
                 $cursos[] = array(
                     "id" => $rs['id'], "name" => $rs['name'], "description" => $rs['description'],
-                    "category" => $rs['category'], "imgname" => $rs['imgname'], 'price' => $rs['price'], 'credentialid' => $rs['credentialid'], 'prom' => $stars[0]['prom'], 'cant' => $stars[0]['cant'], 'bought' => false //"preferenceid"=>$preference->id
+                    "category" => $rs['category'], "imgname" => $rs['imgname'], 'price' => $rs['price'], 'credentialid' => $rs['credentialid'], 'prom' => $stars[0]['prom'], 'cant' => $stars[0]['cant'], 'bought' => false, 'videoCode' => $codeVideo //"preferenceid"=>$preference->id
                 );
             }
         }
@@ -84,10 +88,13 @@ function comprados()
                                             WHERE courseuser.iduser = " . $_SESSION['id'] . " ORDER BY creationdate DESC");
     if ($sql->num_rows) {
         while ($rs = $sql->fetch_assoc()) {
+            $codeVideoQuery = MySQLDB::getInstance()->query("SELECT videoscourse.name FROM videoscourse,themes,course WHERE course.id=" . $rs['id'] . " AND course.id=videoscourse.idcourse AND videoscourse.idtheme=themes.id AND themes.name='intro'");
+            $codeVideoArray = $codeVideoQuery->fetch_assoc();
+            $codeVideo=$codeVideoArray['name'];
             $stars = consultastar($rs['id']);
             $cursos[] = array(
                 'id' => $rs['id'], 'name' => $rs['name'], 'description' => $rs['description'],
-                'category' => $rs['category'], 'imgname' => $rs['imgname'], 'prom' => $stars[0]['prom'], 'cant' => $stars[0]['cant'], 'bought' => true
+                'category' => $rs['category'], 'imgname' => $rs['imgname'], 'prom' => $stars[0]['prom'], 'cant' => $stars[0]['cant'], 'bought' => true, 'videoCode' => $codeVideo
             );
         }
         echo json_encode($cursos); //Array de cursos

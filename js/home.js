@@ -371,7 +371,7 @@ function carga(operacion, categoria, subcategoria) {
 
         },
         beforeSend: function () { //Previo a la peticion tenemos un cargando
-            $('#contenedor_home').empty(); //vaciamos el contenedor en el cual van a cargarse los cursos
+            //$('#contenedor_home').empty(); //vaciamos el contenedor en el cual van a cargarse los cursos
             $('#carga_cursos').show("fast"); //mostramos rapidamente los elementos que representan a los cursos
         },
         success: function (rs) {
@@ -398,6 +398,7 @@ function carga(operacion, categoria, subcategoria) {
 
                         });
                         let j = 1;
+                        $('#contenedor_home').empty();
                         paginacion(courses, j, "");
                         resultadocompra();
                     } else {
@@ -588,6 +589,7 @@ function cargacurso() {
                     "idcourse": id
                 },
                 beforeSend: function () { //Previo a la peticion tenemos un cargando
+
                     $('#curso' + id).removeClass('btn-success');
                     $('#curso' + id).addClass('btn-dark');
                     $('#curso' + id).attr("disabled", "disabled");
@@ -612,7 +614,7 @@ function cargacurso() {
                     //console.log(courses);
                     let r = JSON.parse(courses);
                     let rs = r[0];
-                    //console.log(rs[0]);
+
                     // console.log(rs['videoname']);
                     //--------------------------------------------------------------------CURSO COMPRADO----------------------------------------------------------------------------
                     if (rs['bought'] == true) {
@@ -746,24 +748,50 @@ function cargacurso() {
                     } else {
                         //------------------------------------------------------------------CURSO NO COMPRADO---------------------------------------------------------------------------                                
                         //console.log("Elemento no comprado");
-                        //console.log(rs["preferenceid"]);
-                        var preferenceid = rs["preferenceid"];
+
+                        let preferenceid = rs["preferenceid"];
+                        let pagoTotal = rs["price"];
+                        let clientID = rs["userid"]; // encriptar
+                        let name = rs["name"];
+                        let productID = rs["id"];
+                        let descripcion = rs["description"];
                         //var img=  $('#img'+id);
 
 
                         if (preferenceid != 0) {
-                            //creamos formulario de pago  
+                            //creamos formulario de pago  Mercadopago
                             $('#pago').empty();
                             var form = document.createElement("form");
                             form.method = "POST";
-                            form.action = "/mendumy2/mendumy/mendumy/home.php"; //"/procesar-pago";
+                            form.action = "/myclassroom/myclassroom/home.php"; //"/procesar-pago";
                             form.id = "form_pago";
                             document.getElementById('pago').appendChild(form);
                             var script = document.createElement("script");
                             script.type = "text/javascript";
                             script.src = 'https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js'; // use this for linked script
                             script.setAttribute("data-preference-id", preferenceid);
+                            script.setAttribute("data-button-label", "Mercadopago");
                             document.getElementById('form_pago').appendChild(script);
+                            //boton paypal
+                            var div = document.createElement("div");
+                            div.setAttribute("id", "paypal-button-container");
+                            div.setAttribute("class", "mt-3");
+                            $('#pago').append(div);
+                            console.log(" " + pagoTotal + " " + clientID + " " + productID + " " + name + " " + descripcion + " " + preferenceid);
+                            paypal(productID, clientID, pagoTotal, descripcion, name);
+
+
+
+
+
+
+                            /*var scriptP = document.createElement("script");
+                            scriptP.type = "text/javascript";
+                            scriptP.src = 'https://www.paypal.com/sdk/js?client-id=AcOza97oiUXYV9EN2AcaxvirhxnDb4vAxOMBiTkbPqmHv8ig7Ri_xQteWqmuMlkcQFYCK-7TCrOijG4E&currency=USD'; // use this for linked script
+                            $('#pago').append(scriptP);  */
+
+
+
 
 
                         } else {
@@ -792,6 +820,92 @@ function cargacurso() {
     });
 }
 
+function paypal(productID, clientID, pagoTotal, descripcion, name) {
+
+    //let pagoTotal = '1';
+    //let clientID = 2; //recordar encriptar
+    //let productID = 153;
+    //let descripcion = "Curso numero 6"
+    // Render the PayPal button into #paypal-button-container paypal.Buttons
+    console.log(" " + pagoTotal + " " + clientID + " " + productID + " " + name + " " + descripcion);
+
+    window.paypal_sdk.Buttons({
+
+
+        style: {
+            layout: 'horizontal',
+            size: 'responsive', // small | medium | large | responsive
+            shape: 'rect', // pill | rect
+            label: 'pay' // checkout | credit | pay | buynow | generic
+
+
+        },
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            console.log(data);
+            return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+
+                            value: pagoTotal,
+                        },
+                        description: "Cursos: " + name + " " + descripcion,
+                        reference_id: productID + "#" + clientID
+
+                    }]
+                }
+                //paypal en su documentacion nueva no utiliza custom pot que ahora utiliza reference_id, por eso se debe utilizar este capo
+            );
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                // Show a success message to the buyer
+                //alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                // yo deje esta alerta para una mejor verificacion del codigo
+                console.log(data);
+                //con este codigo se muestran las variables de data depaypal  en el consola del explorador
+                //window.location = "./php/verificador_paypal.php?facilitatorAccessToken=" + data.facilitatorAccessToken + "&orderID=" + data.orderID + "&payerID=" + data.payerID
+                $('#exampleModal').modal('hide');
+                cartelModal("Procesando transacción", "spinner");
+                $.ajax({
+
+                    url: "./php/verificador_paypal.php",
+                    type: "post",
+                    data: {
+                        'facilitatorAccessToken': data.facilitatorAccessToken,
+                        'orderID': data.orderID,
+                        'payerID': data.payerID,
+                    },
+
+                    beforeSend: function () { //Previo a la peticion tenemos un cargando
+
+                    },
+                    error: function (error) { //Si ocurre un error en el ajax
+
+                    },
+                    complete: function () { //Al terminar la peticion, sacamos la "carga" visual
+
+                    },
+
+                    success: function (r) {
+
+                        let typePaypal = JSON.parse(r);
+                        console.log(typePaypal);
+                        console.log(typePaypal['nombre']);
+                        resultadocompra(typePaypal['nombre']);
+
+                    }
+
+                });
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+
+}
 
 function viewsquery() {
 
@@ -1156,7 +1270,7 @@ function mostrarcurso(idcurso, modificar) {
                         '<p class=""> ' + description + ' </p>' +
                         archivos +
                         '<div class="container d-flex justify-content-around mb-3 mt-3 ">' +
-                        '<button class=" btn btn-md p-1  btn-outline-dark mr-2 col-xs-12 col-xl-4"  id="' + idcourse + '">Volver</button>' +
+                        '<button class=" btn btn-md p-1  btn-outline-warning mr-2 col-xs-12 col-xl-4"  id="' + idcourse + '">Volver</button>' +
                         '<a class=" btn btn-md p-1  btn-warning mr-2 col-xs-12 col-xl-4" href="mailto:soporte@notarweb.com.ar?subject=consulta en ' + title + '" id="video' + id + '">Consultas</a>' +
                         '</div>' +
                         '</div>' +
@@ -1455,8 +1569,8 @@ function jumbotron(accion, titulo, subtitulo) {
             //script para cambiar el jumbotron
             $('#jumbotron').empty().append(
                 '<div class="container text-right">' +
-                '<h2 class="">' + titulo +
-                '</h1>' +
+                '<h3 >' + titulo +
+                '</h3>' +
                 '<p class="lead">' + subtitulo +
                 '</p> </div>'
 
@@ -1597,39 +1711,51 @@ function modificarcurso(id) {
 }
 
 function cartelModal(contenido, tipo) {
-    let cartel = '<div  class="text-center alert alert-' + tipo + ' fade show mb-4" role="alert">' + contenido + '</div>';
+    if (tipo != "spinner") {
+        let cartel = '<div  class="text-center alert alert-' + tipo + ' fade show mb-4" role="alert">' + contenido + '</div>';
+        $('#pago').empty().append(cartel);
+        $('#exampleModal').modal('show');
+    } else {
+        let spinner = '<div class="spinner-grow" role="status">' +
+            +'<span class="sr-only">Loading...</span>' +
+            +'</div>';
+        let cartel = '<div  class="text-center alert alert-warning fade show mb-4" role="alert">' + contenido + '</div>' + spinner;
+        $('#pago').empty().append(cartel);
+        $('#exampleModal').modal('show');
 
-
-    $('#pago').empty().append(cartel);
-    $('#exampleModal').modal('show');
+    }
 }
 
-function resultadocompra() {
+function resultadocompra(typePaypal) {
 
+    if (typeof typePaypal === 'undefined') {
+        let params = new URLSearchParams(location.search);
+        let result = params.get('result');
+        let idcourse = params.get('idcourse');
+        let status = params.get('collection_status');
+        let credentialid = params.get('credentialid');
+        let ide = '#curso' + idcourse;
+        let curso = $(ide).attr('title');
+        let id = params.get('collection_id');
 
-    let params = new URLSearchParams(location.search);
-    let result = params.get('result');
-    let idcourse = params.get('idcourse');
-    let status = params.get('collection_status');
-    let credentialid = params.get('credentialid');
-    let ide = '#curso' + idcourse;
-    let curso = $(ide).attr('title');
-    let id = params.get('collection_id');
-
-    //console.log(id);
-    switch (result) {
-        case "success":
-            if (status == 'approved') {
-                successBuy(id, credentialid);
-                cartelModal('¡Felicidades, has adquirido el curso <b>' + curso + '</b>!', "success");
+        //console.log(id);
+        switch (result) {
+            case "success":
+                if (status == 'approved') {
+                    successBuy(id, credentialid);
+                    cartelModal('¡Felicidades, has adquirido el curso <b>' + curso + '</b>!', "success");
+                    window.history.replaceState(null, null, window.location.pathname); //limpiamos url
+                };
+                break;
+            case "pending":
+                cartelModal('¡Gracias por iniciar la compra de <b>' + curso + '</b>!, una vez que se registre el pago podrás ingresar al curso.', "info");
                 window.history.replaceState(null, null, window.location.pathname); //limpiamos url
-            };
-            break;
-        case "pending":
-            cartelModal('¡Gracias por iniciar la compra de <b>' + curso + '</b>!, una vez que se registre el pago podrás ingresar al curso.', "info");
-            window.history.replaceState(null, null, window.location.pathname); //limpiamos url
-            ;
-            break;
+                break;
+        }
+    } else {
+
+        console.log("tipo paypal");
+        cartelModal('¡Felicidades, has adquirido el curso <b>' + typePaypal + '</b>!', "success");
     }
 
 
@@ -1654,7 +1780,7 @@ function getRegistrados() {
         url: "./php/getRegistrados.php",
         type: "get",
         success: function (data) {
-            $('#registradosTotales').append('<b>' + data + '</b>');
+            $('#registradosTotales').append('<h4><b>' + data + '</b></h4>');
         }
     });
 }

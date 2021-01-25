@@ -121,9 +121,9 @@ if (isset($_POST['idcourse'])) {
                 $preference->payer = $payer;
                 //urls a las que redirecciona al terminar la transaccion
                 $preference->back_urls = array(
-                    "success" => "http://localhost/mendumy2/mendumy/mendumy/home.php?credentialid=" . $credentialid . "&result=success&idcourse=" . $idcourse . "",
-                    "failure" => "http://localhost/mendumy2/mendumy/mendumy/home.php?credentialid=" . $credentialid . "&result=fairule&idcourse=" . $idcourse . "",
-                    "pending" => "http://localhost/mendumy2/mendumy/mendumy/home.php?credentialid=" . $credentialid . "&result=pending&idcourse=" . $idcourse . "",
+                    "success" => "http://localhost/myclassroom/myclassroom/home.php?credentialid=" . $credentialid . "&result=success&idcourse=" . $idcourse . "",
+                    "failure" => "http://localhost/myclassroom/myclassroom/home.php?credentialid=" . $credentialid . "&result=fairule&idcourse=" . $idcourse . "",
+                    "pending" => "http://localhost/myclassroom/myclassroom/home.php?credentialid=" . $credentialid . "&result=pending&idcourse=" . $idcourse . "",
                 );
                 //excluimos algunos medios de pago
                 $preference->payment_methods = array(
@@ -148,7 +148,7 @@ if (isset($_POST['idcourse'])) {
                 $preference->save(); //inicializa
 
                 $curso[] = array(
-                    'id' => $rs['id'], 'preferenceid' => $preference->id, 'bought' => false
+                    'id' => $rs['id'], 'preferenceid' => $preference->id, 'bought' => false , 'name' => $rs['name'], 'description' => $rs['description'],'price'=>$rs['price'],"userid"=> $_SESSION['id'],
                 );
 
 

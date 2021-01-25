@@ -20,7 +20,6 @@
 
 body {
     overflow-x: hidden;
-    /*background-image: url("../img/header-bg.jpg");*/
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: center center;
@@ -94,7 +93,6 @@ body {
 
 #page-content-wrapper {
     min-width: 0;
-    margin-top: 93px;
     width: 100%;
 }
 
@@ -108,7 +106,6 @@ body {
     }
     #page-content-wrapper {
         min-width: 0;
-        margin-top: 93px;
         width: 100%;
     }
     #wrapper.toggled #sidebar-wrapper {
@@ -118,14 +115,15 @@ body {
 
 .mendocard {
     padding: 30px 15px 15px 15px;
-    background-color: #343a40;
-    color: white;
+    background-color: white;
+    color: black;
     border: 1px solid #e6e6e6;
     border-radius: 2px;
 }
 
 .mendocard-picture {
     width: 100%;
+    overflow: hidden;
 }
 
 button.mercadopago-button {
@@ -150,4 +148,29 @@ button.mercadopago-button:hover {
     color: #fff;
     background-color: #0069d9;
     border-color: #0062cc;
+}
+
+/*superposicion de imagenes de cursos con icono de play card-imgs*/
+
+#card-imgs {
+    position: relative;
+}
+
+.sobre {
+    filter: opacity(.9);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border: none;
+}
+
+.sobre:hover {
+    filter: opacity(0.7);
+    /*-webkit-transform: scale(.1);*/
+    /*transform: scale(.99);*/
+    cursor: pointer;
+}
+
+.playicon {
+    padding: 50px;
 }

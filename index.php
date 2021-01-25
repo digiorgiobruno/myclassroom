@@ -50,7 +50,8 @@ if (session_status() == PHP_SESSION_NONE) {
   <!--tema grafico de jqueryui-->
 
   <link rel="stylesheet" type="text/css" href="vendor/jqueryui/jquery-ui.css">
-
+  <!-- Custom styles for this template -->
+  <link href="css/simple-sidebar.css" rel="stylesheet">
   <!-- Deshabilitamos cache -->
   <meta http-equiv="expires" content="0">
 
@@ -64,77 +65,99 @@ if (session_status() == PHP_SESSION_NONE) {
 
 <body>
   <input type="hidden" id="role" name="" value="<?php echo $sesion ?>">
-  <div class="navbar navbar-expand-md navbar-dark bg-dark mb-4 fixed-top" role="navigation" style="background: black !important">
-    <a class="navbar-brand" href="#"><img src="img/logo.jpg" width="120" alt="Logo"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul id='cat1' class="navbar-nav mr-auto">
-        <div class="">
-          <div class="g1 d-flex flex-row ">
-            <!--Item Inicio-->
-            <li class="nav-item active">
-              <a id="inicio" class="nav-link nav-element" href="#">Inicio <span class="sr-only">(current)</span></a>
-            </li>
-
-            <!--Item Mis Cursos-->
-            <li class="nav-item active">
-              <a id="login" class="nav-link nav-element" href="#">Iniciar sesión</a>
-            </li>
-            <li class="nav-item active">
-              <a id="" class="registrarse nav-link nav-element" href="#">Registrarse</a>
-            </li>
-          </div>
-          <div class="g1 d-flex flex-row ">
-            <!--Item Dropdown Cursos categoria-->
-            <li id="cat2" class="nav-item dropdown active">
-              <a class="nav-link dropdown-toggle" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categorías</a>
-              <ul class="dropdown-menu" aria-labelledby="dropdown1">
-
-                <!--Item categoria-->
-                <li class="dropdown-item dropdown">
-
-                  <a class="dropdown-toggle" id="dropdown1-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categoria 2</a>
-                  <!--Item subcategoria-->
-                  <ul class="dropdown-menu" aria-labelledby="dropdown1-1">
-                    <li class="dropdown-item" href="#"><a>Subcategoria</a></li>
-
-                  </ul>
-
-                </li>
-
-              </ul>
-
-            </li>
-          </div>
-        </div>
-      </ul>
-      <span class="float-right navbar-text text-white">
-        Contacto:
-        <a href="mailto:soporte@myclassroom.com.ar">soporte@myclassroom.com.ar</a>
-      </span>
-
-    </div>
-  </div>
-
 
 
   <div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper" style="background: black !important">
+
+      <div class="sidebar-heading">
+        <a class="navbar-brand" href="#"><img src="img/logo.jpg" width="120" alt="logo"></a>
+
+      </div>
+      <div class="list-group list-group-flush">
+
+        <ul id='cat1' class="navbar-nav mr-auto">
+          <!--Item Dropdown Cursos categoria-->
+          <li id='cat2' class="nav-item dropdown list-group-item list-group-item-action">
+            <a class="nav-link dropdown-toggle" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Categorías</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown1">
+
+              <!--Item categoria-->
+              <li class="dropdown-item dropdown">
+
+                <a class="dropdown-toggle" id="dropdown1-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categoria 2</a>
+                <!--Item subcategoria-->
+                <ul class="dropdown-menu" aria-labelledby="dropdown1-1">
+                  <li class="dropdown-item" href="#"><a>Subcategoria</a></li>
+                </ul>
+
+              </li>
+
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
     <!--INICIO DE CONTENIDO DE PAGINA -->
 
     <div id="page-content-wrapper" style="background: rgb(250,250,250);">
 
 
 
-      <div class="jumbotron p-4" id="jumbotron">
+      <!--nav -->
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark" role="navigation" style="background: black !important">
+
+        <button class="btn btn-primary mr-3" id="menu-toggle">Cursos</i></button>
+
+        <button id="btn-toggle" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul id='cat1' class="navbar-nav mr-auto">
+
+
+            <div class="g1 d-flex flex-row">
+              <!--Item Inicio-->
+              <li class="nav-item active">
+                <a id="inicio" class="nav-link nav-element" href="#">Inicio <span class="sr-only">(current)</span></a>
+              </li>
+              <!--Item Mis Cursos-->
+              <li class="nav-item active">
+                <a id="login" class="nav-link nav-element" href="#">Iniciar sesión</a>
+              </li>
+              <!--Item registro-->
+              <li class="nav-item active">
+                <a id="" class="registrarse nav-link nav-element" href="#">Registrarse</a>
+              </li>
+
+
+
+
+            </div>
+
+
+          </ul>
+
+
+          <span class="navbar-text text-white">
+            Contacto:
+            <a href="mailto:soporte@myclassroom.com.ar">soporte@myclassroom.com.ar</a>
+          </span>
+        </div>
+      </nav>
+
+      <div class="jumbotron p-1" id="jumbotron">
         <div class="container text-right">
-          <h1 class="">Nuestros cursos
-          </h1>
+          <h3 class="">Nuestros cursos
+          </h3>
 
 
         </div>
       </div>
+
       <!-- Register Modal -->
       <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -164,20 +187,6 @@ if (session_status() == PHP_SESSION_NONE) {
                   <input class="form-control" type="email" id="emailR" placeholder="Email">
                 </div>
               </div>
-              <!--  <div class="row mb-2">
-                <div class="col-12">
-                  <select class="custom-select custom-select " id="input-select-reg" title="seleccionar categoría">
-                    <option selected>Seleccionar...</option>
-                    <option value="1">Estudiante de Derecho</option>
-                    <option value="2">Abogado</option>
-                    <option value="3">Escribano</option>
-                    <option value="4">Escribano Novel</option>
-                    <option value="5">Otros</option>
-                  </select>
-
-                   <input class="form-control" type="text" id="legajoR" placeholder="Legajo">
-                </div>
-              </div>-->
 
               <div class="row mb-2">
                 <div class="col-12">
@@ -327,13 +336,39 @@ if (session_status() == PHP_SESSION_NONE) {
 
             </div>
 
-            <!-- <div class="modal-footer">
 
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-                                <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
 
-                            </div>-->
+        </div>
+
+      </div>
+      <!-- Modal -->
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+
+          <div class="modal-content">
+
+            <div class="modal-header">
+
+              <h5 class="modal-title" id="exampleModalLabel">Comprar Curso</h5>
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+
+              </button>
+
+            </div>
+
+            <div id='pago' class="modal-body">
+
+
+
+            </div>
+
 
           </div>
 
@@ -536,16 +571,43 @@ if (session_status() == PHP_SESSION_NONE) {
 
       </div>
 
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-4">
+              <span class="copyright">Copyright &copy; MyClassroom</span>
+            </div>
+            <div class="col-md-4">
+              <ul class="list-inline social-buttons">
+
+                <li class="list-inline-item">
+                  <a href="#" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a href="https://www.instagram.com/myclassroom_ok/" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <script language="JavaScript" type="text/javascript">
+                TrustLogo("https://micuenta.donweb.com/img/sectigo_positive_sm.png", "CL1", "none");
+              </script>
+              <a style="color:#fed136;" href="https://donweb.com/es-ar/certificados-ssl" id="comodoTL" title="Certificados SSL Argentina">Certificados SSL Argentina</a>
+            </div>
+
+          </div>
+        </div>
+      </footer>
 
 
     </div>
 
-    <!--INICIO DE CONTENIDO DE PAGINA -->
-
   </div>
-
-
-
   <!-- Modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-video" role="document">
@@ -569,61 +631,10 @@ if (session_status() == PHP_SESSION_NONE) {
     </div>
   </div>
 
-  <!--<div class="modal fade bd-example-modal-lg" id="modalvideo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <video id="video" controls style="width:100%;">
-          Tu navegador no admite el elemento <code>video</code>.
-          <source src="" type="video/mp4" preload="auto">
-        </video>
-      </div>
-    </div>
-  </div>-->
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4">
-          <span class="copyright">Copyright &copy; MyClassroom</span>
-        </div>
-        <div class="col-md-4">
-          <ul class="list-inline social-buttons">
-            <!-- <li class="list-inline-item">
-              <a href="#">
-                <i class="fab fa-linkedin-in"></i>
-              </a>
-            </li>-->
-            <li class="list-inline-item">
-              <a href="#" target="_blank">
-                <i class="fab fa-facebook-f"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="https://www.instagram.com/myclassroom_ok/" target="_blank">
-                <i class="fab fa-instagram"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-md-4">
-          <script type="text/javascript">
-            const tlJsHost = ((window.location.protocol == "https:") ? "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
-            document.write(unescape("<script src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript' %3E%3C/script%3E"));
-          </script>
-
-          <script language="JavaScript" type="text/javascript">
-            TrustLogo("https://micuenta.donweb.com/img/sectigo_positive_sm.png", "CL1", "none");
-          </script>
-          <a style="color:#fed136;" href="https://donweb.com/es-ar/certificados-ssl" id="comodoTL" title="Certificados SSL Argentina">Certificados SSL Argentina</a>
-        </div>
-
-      </div>
-    </div>
-  </footer>
 
 
 
+  
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/jqueryui/jquery-ui.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
